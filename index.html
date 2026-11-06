@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Installed Software Report: Setup Guide</title>
+    <title>Installation Software Report: Setup Guide</title>
     <style>
       :root {
         --bg: #f6f7f9;
@@ -347,10 +347,9 @@
       if (Test-Path $sc) { $pkg += Get-ChildItem $sc -Directory | Where-Object Name -ne 'scoop' | ForEach-Object Name }
       function Sec($t, $n) { $n = @($n | Where-Object { $_ }); if (-not $n) { return '' }; "<h2>$t <span>($($n.Count))</span></h2><ul>" + (($n | ForEach-Object { '<li>' + [Net.WebUtility]::HtmlEncode($_) + '</li>' }) -join '') + '</ul>' }
       $os = (Get-CimInstance Win32_OperatingSystem).Caption
-      $html = @"
-      <!DOCTYPE html><html><head><meta charset="utf-8"><title>Installed Software</title><style>@page{size:A4;margin:15mm}body{font:10pt Segoe UI,Arial;color:#222}h1{font-size:20pt;margin:0}.s{color:#666;font-size:9pt;margin-bottom:12pt}h2{font-size:12pt;color:#1f4e99;border-bottom:1px solid #1f4e99;margin:14pt 0 6pt;break-after:avoid}h2 span{color:#888;font-size:9pt;font-weight:normal}ul{list-style:none;padding:0;margin:0;column-count:2;column-gap:20pt}li{padding:1.5pt 0;break-inside:avoid}</style></head><body><h1>Installed Software List</h1><div class="s">$env:COMPUTERNAME | $(Get-Date -Format 'yyyy-MM-dd HH:mm') | $os</div>
-      $(Sec 'Installed Programs' $prog)$(Sec 'Start Menu Apps' $start)$(Sec 'Packages (Chocolatey / Scoop)' $pkg)</body></html>
-      "@
+      $css = '@page{size:A4;margin:15mm}body{font:10pt Segoe UI,Arial;color:#222}h1{font-size:20pt;margin:0}.s{color:#666;font-size:9pt;margin-bottom:12pt}h2{font-size:12pt;color:#1f4e99;border-bottom:1px solid #1f4e99;margin:14pt 0 6pt;break-after:avoid}h2 span{color:#888;font-size:9pt;font-weight:normal}ul{list-style:none;padding:0;margin:0;column-count:2;column-gap:20pt}li{padding:1.5pt 0;break-inside:avoid}'
+      $stamp = Get-Date -Format 'yyyy-MM-dd HH:mm'
+      $html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Installed Software</title><style>' + $css + '</style></head><body><h1>Installed Software List</h1><div class="s">' + $env:COMPUTERNAME + ' | ' + $stamp + ' | ' + $os + '</div>' + (Sec 'Installed Programs' $prog) + (Sec 'Start Menu Apps' $start) + (Sec 'Packages (Chocolatey / Scoop)' $pkg) + '</body></html>'
       $h = Join-Path $env:TEMP 'sw_list.html'
       [IO.File]::WriteAllText($h, $html, (New-Object Text.UTF8Encoding($false)))
       $b = @("${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe","$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe","$env:ProgramFiles\Google\Chrome\Application\chrome.exe","${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1
