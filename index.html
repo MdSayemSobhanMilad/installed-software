@@ -231,7 +231,8 @@
             <p>
               Click the button, click inside the PowerShell window, paste with
               <kbd>Ctrl</kbd>+<kbd>V</kbd> (or right-click) and press
-              <kbd>Enter</kbd>. Wait 10–20 seconds.
+              <kbd>Enter</kbd>. It’s one long line; that’s normal. Wait 10–20
+              seconds.
             </p>
             <p>
               The script is saved in your <b>Downloads</b> folder, and the PDF
@@ -516,12 +517,17 @@
         .querySelectorAll(".form-link")
         .forEach((a) => (a.href = FORM_URL));
 
-      function cmd(os) {
-        const s = $("#src-" + os)
+      function src(os) {
+        return $("#src-" + os)
           .textContent.replace(/^\s*\n/, "")
           .replace(/\s+$/, "");
+      }
+      function cmd(os) {
+        const s = src(os);
         if (os === "windows") {
-          return `$d = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path\n$f = "$d\\software_list_to_pdf.ps1"\n@'\n${s}\n'@ | Set-Content -Path $f -Encoding UTF8\npowershell -NoProfile -ExecutionPolicy Bypass -File $f -OutFile "$d\\installed_software.pdf"`;
+          // One single line (script encoded as base64) so the console can't add spaces or break lines when pasting
+          const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(s)));
+          return `$d = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path; $f = "$d\\software_list_to_pdf.ps1"; [IO.File]::WriteAllBytes($f, [Convert]::FromBase64String('${b64}')); powershell -NoProfile -ExecutionPolicy Bypass -File $f -OutFile "$d\\installed_software.pdf"`;
         }
         return `D="$(xdg-user-dir DOWNLOAD 2>/dev/null || echo "$HOME/Downloads")"; mkdir -p "$D"\ncat > "$D/software_list_to_pdf.sh" <<'SWEOF'\n${s}\nSWEOF\nbash "$D/software_list_to_pdf.sh" -o "$D/installed_software.pdf"`;
       }
@@ -561,7 +567,12 @@
       document.querySelectorAll("details[data-view]").forEach((d) =>
         d.addEventListener("toggle", () => {
           const pre = d.querySelector("pre");
-          if (d.open && !pre.textContent) pre.textContent = cmd(d.dataset.view);
+          if (d.open && !pre.textContent)
+            pre.textContent =
+              d.dataset.view === "windows"
+                ? "# The command saves this script into your Downloads folder, then runs it:\n\n" +
+                  src("windows")
+                : cmd("linux");
         }),
       );
     </script>
