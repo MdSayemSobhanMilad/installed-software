@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Installed Software Report: Setup Guide</title>
+    <style>
+      :root {
+        --bg: #f6f7f9;
+        --fg: #1b1f24;
+        --mut: #5b6470;
+        --card: #fff;
+        --line: #dde1e6;
+        --acc: #1f5fbf;
+        --accfg: #fff;
+        --warn: #fff4d6;
+        --warnfg: #6b4b00;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #14171b;
+          --fg: #e8eaed;
+          --mut: #9aa3ae;
+          --card: #1d2127;
+          --line: #2e343c;
+          --acc: #5b9cf5;
+          --accfg: #0b1220;
+          --warn: #3a2f10;
+          --warnfg: #f3d98b;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #14171b;
+        --fg: #e8eaed;
+        --mut: #9aa3ae;
+        --card: #1d2127;
+        --line: #2e343c;
+        --acc: #5b9cf5;
+        --accfg: #0b1220;
+        --warn: #3a2f10;
+        --warnfg: #f3d98b;
+        color-scheme: dark;
+      }
+      :root {
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          16px/1.55 system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          Ubuntu,
+          sans-serif;
+      }
+      main {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 28px 18px 48px;
+      }
+      h1 {
+        font-size: 1.65rem;
+        line-height: 1.25;
+        margin: 0 0 6px;
+      }
+      .lead {
+        color: var(--mut);
+        margin: 0 0 22px;
+      }
+      .toggle {
+        display: flex;
+        gap: 6px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 5px;
+        margin-bottom: 20px;
+      }
+      .toggle button {
+        flex: 1;
+        padding: 11px 8px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--fg);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .toggle button[aria-pressed="true"] {
+        background: var(--acc);
+        color: var(--accfg);
+      }
+      .step {
+        display: flex;
+        gap: 14px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .num {
+        flex: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--acc);
+        color: var(--accfg);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+      .step h2 {
+        font-size: 1.05rem;
+        margin: 2px 0 4px;
+      }
+      .step p {
+        margin: 4px 0;
+      }
+      kbd {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 1px 6px;
+        font-size: 0.9em;
+      }
+      .note {
+        background: var(--warn);
+        color: var(--warnfg);
+        border-radius: 10px;
+        padding: 9px 12px;
+        margin: 8px 0;
+        font-size: 0.95rem;
+      }
+      .btn {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 9px;
+        background: var(--acc);
+        color: var(--accfg);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      details {
+        margin-top: 18px;
+        color: var(--mut);
+        font-size: 0.93rem;
+      }
+      summary {
+        cursor: pointer;
+      }
+      pre {
+        max-height: 260px;
+        overflow: auto;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 0.78rem;
+        color: var(--fg);
+      }
+      .hide {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Installed Software Report</h1>
+      <p class="lead">
+        Takes about 2 minutes. Pick your system, follow the steps, then upload
+        the PDF. The script only reads your list of installed software; it
+        doesn’t install or change anything.
+      </p>
+
+      <div
+        class="toggle"
+        role="group"
+        aria-label="Choose your operating system"
+      >
+        <button type="button" data-os="windows" aria-pressed="true">
+          Windows
+        </button>
+        <button type="button" data-os="linux" aria-pressed="false">
+          Linux (Ubuntu)
+        </button>
+      </div>
+
+      <section id="p-windows">
+        <div class="step">
+          <div class="num">1</div>
+          <div>
+            <h2>Open PowerShell</h2>
+            <p>
+              Press the <kbd>Windows</kbd> key, type <b>PowerShell</b>, press
+              <kbd>Enter</kbd>.
+            </p>
+            <div class="note">
+              Open it normally. Do <b>not</b> choose “Run as administrator”; it
+              isn’t needed.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div>
+            <h2>Copy, paste, run</h2>
+            <p>
+              Click the button, click inside the PowerShell window, paste with
+              <kbd>Ctrl</kbd>+<kbd>V</kbd> (or right-click) and press
+              <kbd>Enter</kbd>. Wait 10–20 seconds.
+            </p>
+            <p>
+              The script is saved in your <b>Downloads</b> folder, and the PDF
+              <b>installed_software.pdf</b> is created in that same folder and
+              opens automatically.
+            </p>
+            <button class="btn" type="button" data-copy="windows">
+              Copy command
+            </button>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div>
+            <h2>Upload the PDF</h2>
+            <p>
+              Open the form and upload <b>installed_software.pdf</b> from your
+              Downloads folder.
+            </p>
+            <a class="btn form-link" target="_blank" rel="noopener"
+              >Open the upload form</a
+            >
+          </div>
+        </div>
+        <details>
+          <summary>
+            The PDF didn’t open, or only an .html file appeared?
+          </summary>
+          <p>
+            Your PC has no Edge or Chrome available for PDF creation. Open the
+            .html file that appeared in Downloads, press
+            <kbd>Ctrl</kbd>+<kbd>P</kbd>, choose <b>Save as PDF</b>, then upload
+            that.
+          </p>
+        </details>
+        <details data-view="windows">
+          <summary>See exactly what this command does</summary>
+          <pre></pre>
+        </details>
+      </section>
+
+      <section id="p-linux" class="hide">
+        <div class="step">
+          <div class="num">1</div>
+          <div>
+            <h2>Open Terminal</h2>
+            <p>Press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>.</p>
+            <div class="note">
+              No <code>sudo</code> or root needed. Run it as your normal user.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div>
+            <h2>Copy, paste, run</h2>
+            <p>
+              Click the button, click inside the Terminal, paste with
+              <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> and press
+              <kbd>Enter</kbd>. Wait a few seconds.
+            </p>
+            <p>
+              The script is saved in your <b>Downloads</b> folder, and the PDF
+              <b>installed_software.pdf</b> is created in that same folder.
+            </p>
+            <button class="btn" type="button" data-copy="linux">
+              Copy command
+            </button>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div>
+            <h2>Upload the PDF</h2>
+            <p>
+              Open the form and upload <b>installed_software.pdf</b> from your
+              Downloads folder.
+            </p>
+            <a class="btn form-link" target="_blank" rel="noopener"
+              >Open the upload form</a
+            >
+          </div>
+        </div>
+        <details>
+          <summary>It says python3 is missing?</summary>
+          <p>
+            Run <code>sudo apt install python3</code>, then paste the command
+            again.
+          </p>
+        </details>
+        <details data-view="linux">
+          <summary>See exactly what this command does</summary>
+          <pre></pre>
+        </details>
+      </section>
+
+      <p style="color: var(--mut); font-size: 0.9rem; margin-top: 22px">
+        Privacy: the PDF contains only software names, plus your computer name,
+        the date and your OS version.
+      </p>
+    </main>
+
+    <script type="text/plain" id="src-windows">
+      param([string]$OutFile = (Join-Path $PSScriptRoot 'installed_software.pdf'))
+      $ErrorActionPreference = 'SilentlyContinue'
+      $reg = @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*','HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*')
+      $prog = Get-ItemProperty -Path $reg | Where-Object { $_.DisplayName -and $_.SystemComponent -ne 1 -and -not $_.ParentKeyName -and $_.DisplayName -notmatch '^(Update for|Security Update|Hotfix)|\(KB\d+\)' } | ForEach-Object { $_.DisplayName.Trim() } | Sort-Object -Unique
+      $start = Get-StartApps | ForEach-Object { $_.Name.Trim() } | Sort-Object -Unique
+      $pkg = @()
+      if (Get-Command choco) { $pkg += choco list --local-only --limit-output | ForEach-Object { ($_ -split '\|')[0] } }
+      $sc = Join-Path $env:USERPROFILE 'scoop\apps'
+      if (Test-Path $sc) { $pkg += Get-ChildItem $sc -Directory | Where-Object Name -ne 'scoop' | ForEach-Object Name }
+      function Sec($t, $n) { $n = @($n | Where-Object { $_ }); if (-not $n) { return '' }; "<h2>$t <span>($($n.Count))</span></h2><ul>" + (($n | ForEach-Object { '<li>' + [Net.WebUtility]::HtmlEncode($_) + '</li>' }) -join '') + '</ul>' }
+      $os = (Get-CimInstance Win32_OperatingSystem).Caption
+      $html = @"
+      <!DOCTYPE html><html><head><meta charset="utf-8"><title>Installed Software</title><style>@page{size:A4;margin:15mm}body{font:10pt Segoe UI,Arial;color:#222}h1{font-size:20pt;margin:0}.s{color:#666;font-size:9pt;margin-bottom:12pt}h2{font-size:12pt;color:#1f4e99;border-bottom:1px solid #1f4e99;margin:14pt 0 6pt;break-after:avoid}h2 span{color:#888;font-size:9pt;font-weight:normal}ul{list-style:none;padding:0;margin:0;column-count:2;column-gap:20pt}li{padding:1.5pt 0;break-inside:avoid}</style></head><body><h1>Installed Software List</h1><div class="s">$env:COMPUTERNAME | $(Get-Date -Format 'yyyy-MM-dd HH:mm') | $os</div>
+      $(Sec 'Installed Programs' $prog)$(Sec 'Start Menu Apps' $start)$(Sec 'Packages (Chocolatey / Scoop)' $pkg)</body></html>
+      "@
+      $h = Join-Path $env:TEMP 'sw_list.html'
+      [IO.File]::WriteAllText($h, $html, (New-Object Text.UTF8Encoding($false)))
+      $b = @("${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe","$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe","$env:ProgramFiles\Google\Chrome\Application\chrome.exe","${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1
+      if ($b) {
+        if (Test-Path $OutFile) { Remove-Item $OutFile -Force }
+        $pd = Join-Path $env:TEMP ('pdfgen_' + [guid]::NewGuid().ToString('N'))
+        Start-Process $b -Wait -WindowStyle Hidden -ArgumentList '--headless','--disable-gpu','--no-pdf-header-footer',"--user-data-dir=`"$pd`"","--print-to-pdf=`"$OutFile`"","`"$(([Uri]$h).AbsoluteUri)`""
+        for ($i = 0; $i -lt 20 -and -not (Test-Path $OutFile); $i++) { Start-Sleep -Milliseconds 500 }
+        Remove-Item $pd -Recurse -Force
+        if (Test-Path $OutFile) { Write-Host "PDF created: $OutFile" -ForegroundColor Green; Start-Process $OutFile; exit }
+      }
+      $fb = [IO.Path]::ChangeExtension($OutFile, '.html'); Copy-Item $h $fb -Force
+      Write-Host "Could not create the PDF automatically. Opened $fb - press Ctrl+P and choose Save as PDF." -ForegroundColor Yellow
+      Start-Process $fb
+    </script>
+
+    <script type="text/plain" id="src-linux">
+      #!/usr/bin/env bash
+      OUT="$HOME/installed_software.pdf"
+      while getopts "o:" o; do [ "$o" = o ] && OUT="$OPTARG"; done
+      command -v python3 >/dev/null || { echo "python3 is required: sudo apt install python3"; exit 1; }
+      have() { command -v "$1" >/dev/null 2>&1; }
+      T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
+      SNAPS='^(core[0-9]*|snapd|bare|firefox|thunderbird|snap-store|snapd-desktop-integration|firmware-updater|desktop-security-center|prompting-client|ubuntu-desktop-installer|gnome-[0-9]+(-[0-9]+)+(-sdk)?|gtk-common-themes|gtk-theme-.*|icon-theme-.*|sound-theme-.*|mesa-[0-9]+|kf5-.*|qt-.*)$'
+      M=""
+      for m in ubuntu-minimal ubuntu-standard ubuntu-desktop ubuntu-desktop-minimal ubuntu-server ubuntu-server-minimal kubuntu-desktop xubuntu-desktop lubuntu-desktop ubuntu-mate-desktop ubuntu-budgie-desktop; do
+        dpkg -s "$m" 2>/dev/null | grep -q '^Status: install ok installed' && M="$M $m"
+      done
+      {
+        [ -n "$M" ] && apt-cache depends --recurse --installed --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances $M 2>/dev/null | grep -v '^[ <|]'
+        [ -f /var/log/installer/initial-status.gz ] && zcat /var/log/installer/initial-status.gz 2>/dev/null | awk '/^Package:/{print $2}'
+        dpkg-query -W -f='${Package}\t${Priority}\n' 2>/dev/null | awk -F'\t' '$2=="required"||$2=="important"{print $1}'
+      } | sed 's/:.*//' | sort -u > "$T/b"
+      apps() {
+        for d in /usr/share/applications /usr/local/share/applications "$HOME/.local/share/applications" /var/lib/snapd/desktop/applications /var/lib/flatpak/exports/share/applications "$HOME/.local/share/flatpak/exports/share/applications"; do
+          [ -d "$d" ] && find "$d" -maxdepth 2 -name '*.desktop' -print0 2>/dev/null
+        done | xargs -0 -r awk -F= '
+          function flush() { if (name != "" && show && app) print fname "\t" name }
+          FNR==1 { flush(); fname=FILENAME; name=""; show=1; app=0; inmain=0 }
+          /^\[/ { inmain = ($0 == "[Desktop Entry]"); next }
+          !inmain { next }
+          $1=="Name" && name=="" { name=substr($0, 6) }
+          $1=="Type" && $2=="Application" { app=1 }
+          $1=="NoDisplay" && $2=="true" { show=0 }
+          $1=="Hidden" && $2=="true" { show=0 }
+          END { flush() }' > "$T/a"
+        cut -f1 "$T/a" | xargs -r -d '\n' dpkg -S 2>/dev/null | awk '{ i = index($0, ": /"); if (i) print substr($0, i+2) "\t" substr($0, 1, i-1) }' > "$T/o"
+        awk -F'\t' -v snapre="$SNAPS" '
+          FILENAME == ARGV[1] { b[$1] = 1; next }
+          FILENAME == ARGV[2] { own[$1] = $2; next }
+          {
+            path = $1; name = $2
+            if (path in own) {
+              n = split(own[path], P, /, /)
+              for (k = 1; k <= n; k++) { p = P[k]; sub(/:.*/, "", p); if (p in b) next }
+            } else if (path ~ /\/snapd\/desktop\/applications\//) {
+              f = path; sub(/.*\//, "", f); sub(/_.*/, "", f)
+              if (f ~ snapre) next
+            }
+            print name
+          }' "$T/b" "$T/o" "$T/a" | sort -u
+      }
+      pkgs() {
+        if have apt-mark; then
+          apt-mark showmanual | sort -u | comm -23 - "$T/b" > "$T/u"
+          dpkg-query -W -f='${Package}\t${Section}\n' 2>/dev/null | awk -F'\t' '$2 ~ /(^|\/)(libs|libdevel)$/ {print $1}' | sort -u > "$T/lib"
+          grep -Ev '^(lib|linux-|language-pack-)' "$T/u" | sort -u | comm -23 - "$T/lib"
+        fi
+        have snap && snap list 2>/dev/null | awk 'NR>1{print $1}' | grep -Ev "$SNAPS"
+        have flatpak && flatpak list --app --columns=name 2>/dev/null
+      }
+      { echo "#H APPLICATIONS"; apps; echo "#H PACKAGES AND TOOLS"; pkgs | sort -u; } > "$T/l"
+      TITLE="Installed Software (excluding built-in)"
+      SUB="$(hostname)  |  $(date '+%Y-%m-%d %H:%M')  |  $(grep PRETTY_NAME /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
+      python3 - "$T/l" "$OUT" "$TITLE" "$SUB" <<'PY'
+      import sys, textwrap
+      src, out, title, sub = sys.argv[1:5]
+      raw = [l.rstrip("\n") for l in open(src, encoding="utf-8", errors="replace")]
+      W, H = 595, 842
+      MX, MT, MB = 40, 50, 45
+      COLS, GAP = 2, 20
+      COLW = (W - 2 * MX - GAP * (COLS - 1)) / COLS
+      FS, LH, WRAP = 9, 12.5, 50
+      def esc(s):
+          s = s.encode("cp1252", "replace").decode("cp1252")
+          return s.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+      rows, count = [], 0
+      for line in raw:
+          if line.startswith("#H "):
+              rows.append(("h", line[3:]))
+          elif line.strip():
+              count += 1
+              parts = textwrap.wrap(line, WRAP) or [line]
+              rows.append(("t", parts[0]))
+              for p in parts[1:]:
+                  rows.append(("c", "   " + p))
+      pages = [[]]
+      first_top = H - MT - 62
+      def top(pi): return first_top if pi == 0 else H - MT
+      bottom = MB + 10
+      pi, ci, y = 0, 0, top(0)
+      def new_col():
+          global pi, ci, y
+          ci += 1
+          if ci >= COLS:
+              ci = 0
+              pi += 1
+              pages.append([])
+          y = top(pi)
+      for st, tx in rows:
+          if y - LH * (3 if st == "h" else 1) < bottom:
+              new_col()
+          if st == "h":
+              y -= 6 if y != top(pi) else 0
+          pages[pi].append((MX + ci * (COLW + GAP), y, st, tx))
+          y -= LH * (1.3 if st == "h" else 1)
+      streams, total = [], len(pages)
+      for n, items in enumerate(pages):
+          c = []
+          if n == 0:
+              c.append(f"BT /F2 20 Tf {MX} {H - MT - 8} Td ({esc(title)}) Tj ET")
+              c.append(f"BT /F1 9 Tf 0.4 g {MX} {H - MT - 26} Td ({esc(sub)}) Tj ET")
+              c.append(f"BT /F1 9 Tf 0.4 g {MX} {H - MT - 38} Td ({esc(str(count))} entries) Tj ET")
+              c.append("0 g")
+          for x, yy, st, tx in items:
+              if st == "h":
+                  c.append(f"0.12 0.3 0.6 rg BT /F2 11 Tf {x:.1f} {yy:.1f} Td ({esc(tx)}) Tj ET")
+                  c.append(f"0.12 0.3 0.6 RG 0.6 w {x:.1f} {yy-3:.1f} m {x+COLW:.1f} {yy-3:.1f} l S")
+                  c.append("0 g 0 G")
+              else:
+                  c.append(f"BT /F1 {FS} Tf {x:.1f} {yy:.1f} Td ({esc(tx)}) Tj ET")
+          c.append(f"BT /F1 8 Tf 0.5 g {W/2-25:.1f} 25 Td (Page {n+1} of {total}) Tj ET")
+          streams.append("\n".join(c).encode("cp1252", "replace"))
+      objs = [b"<< /Type /Catalog /Pages 2 0 R >>"]
+      kids = " ".join(f"{5 + 2*i} 0 R" for i in range(total))
+      objs.append(f"<< /Type /Pages /Kids [{kids}] /Count {total} >>".encode())
+      objs.append(b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>")
+      objs.append(b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>")
+      for i, s in enumerate(streams):
+          objs.append((f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {W} {H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents {6 + 2*i} 0 R >>").encode())
+          objs.append(b"<< /Length " + str(len(s)).encode() + b" >>\nstream\n" + s + b"\nendstream")
+      buf = bytearray(b"%PDF-1.4\n")
+      offsets = []
+      for i, o in enumerate(objs, start=1):
+          offsets.append(len(buf))
+          buf += f"{i} 0 obj\n".encode() + o + b"\nendobj\n"
+      xref = len(buf)
+      buf += f"xref\n0 {len(objs)+1}\n0000000000 65535 f \n".encode()
+      for off in offsets:
+          buf += f"{off:010d} 00000 n \n".encode()
+      buf += f"trailer\n<< /Size {len(objs)+1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode()
+      open(out, "wb").write(buf)
+      print(f"{count} entries, {total} page(s)")
+      PY
+      [ -s "$OUT" ] && echo "PDF created: $OUT" || { echo "Failed to create PDF." >&2; exit 1; }
+    </script>
+
+    <script>
+      // >>> Replace this with your Google Form link <<<
+      const FORM_URL = "https://forms.gle/YOUR_FORM_LINK";
+
+      const $ = (s) => document.querySelector(s);
+      document
+        .querySelectorAll(".form-link")
+        .forEach((a) => (a.href = FORM_URL));
+
+      function cmd(os) {
+        const s = $("#src-" + os)
+          .textContent.replace(/^\s*\n/, "")
+          .replace(/\s+$/, "");
+        if (os === "windows") {
+          return `$d = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path\n$f = "$d\\software_list_to_pdf.ps1"\n@'\n${s}\n'@ | Set-Content -Path $f -Encoding UTF8\npowershell -NoProfile -ExecutionPolicy Bypass -File $f -OutFile "$d\\installed_software.pdf"`;
+        }
+        return `D="$(xdg-user-dir DOWNLOAD 2>/dev/null || echo "$HOME/Downloads")"; mkdir -p "$D"\ncat > "$D/software_list_to_pdf.sh" <<'SWEOF'\n${s}\nSWEOF\nbash "$D/software_list_to_pdf.sh" -o "$D/installed_software.pdf"`;
+      }
+
+      function show(os) {
+        document
+          .querySelectorAll(".toggle button")
+          .forEach((b) => b.setAttribute("aria-pressed", b.dataset.os === os));
+        $("#p-windows").classList.toggle("hide", os !== "windows");
+        $("#p-linux").classList.toggle("hide", os !== "linux");
+      }
+      document
+        .querySelectorAll(".toggle button")
+        .forEach((b) => b.addEventListener("click", () => show(b.dataset.os)));
+      show(/Win/i.test(navigator.userAgent) ? "windows" : "linux");
+
+      document.querySelectorAll("[data-copy]").forEach((btn) =>
+        btn.addEventListener("click", async () => {
+          const t = cmd(btn.dataset.copy);
+          try {
+            await navigator.clipboard.writeText(t);
+          } catch (e) {
+            const a = document.createElement("textarea");
+            a.value = t;
+            document.body.appendChild(a);
+            a.select();
+            try {
+              document.execCommand("copy");
+            } catch (_) {}
+            a.remove();
+          }
+          btn.textContent = "Copied ✓";
+          setTimeout(() => (btn.textContent = "Copy command"), 2000);
+        }),
+      );
+
+      document.querySelectorAll("details[data-view]").forEach((d) =>
+        d.addEventListener("toggle", () => {
+          const pre = d.querySelector("pre");
+          if (d.open && !pre.textContent) pre.textContent = cmd(d.dataset.view);
+        }),
+      );
+    </script>
+  </body>
+</html>
